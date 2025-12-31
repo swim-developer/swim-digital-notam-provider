@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 950 600" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <style type="text/css">
+            @import url('https://fonts.googleapis.com/css2?family=Red+Hat+Text:wght@400;500;600;700&amp;family=Red+Hat+Display:wght@400;700&amp;display=swap');
+        </style>
+        <marker id="arrowhead" markerWidth="6" markerHeight="5" refX="5" refY="2.5" orient="auto">
+            <polygon points="0 0, 6 2.5, 0 5" fill="#90a4ae"/>
+        </marker>
+        <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.3"/>
+        </filter>
+    </defs>
+
+    <!-- Title with Badge -->
+    <text x="525" y="30" text-anchor="middle" fill="#2e7d32" font-weight="700" font-size="22" font-family="'Red Hat Display', sans-serif">SWIM DNOTAM Provider</text>
+    <rect x="700" y="15" width="180" height="24" rx="12" fill="#ffc107"/>
+    <text x="790" y="32" text-anchor="middle" fill="#000" font-weight="600" font-size="11" font-family="'Red Hat Text', sans-serif">SWIM-TI Yellow Profile</text>
+    <text x="525" y="52" text-anchor="middle" fill="#66bb6a" font-size="14" font-family="'Red Hat Text', sans-serif">Event Publishing &amp; Subscription Management</text>
+
+    <!-- ==================== EXTERNAL CLIENT (Left) ==================== -->
+    <rect x="20" y="220" width="140" height="160" rx="8" fill="#fce4ec" stroke="#c2185b" stroke-width="2" filter="url(#shadow)"/>
+    <rect x="20" y="220" width="140" height="28" rx="8" fill="#c2185b"/>
+    <rect x="20" y="240" width="140" height="8" fill="#c2185b"/>
+    <text x="90" y="242" text-anchor="middle" fill="#fff" font-weight="600" font-size="14" font-family="'Red Hat Text', sans-serif">Client</text>
+    <text x="90" y="277" text-anchor="middle" fill="#880e4f" font-size="12" font-family="'Red Hat Text', sans-serif">REST (mTLS)</text>
+    <text x="90" y="297" text-anchor="middle" fill="#ad1457" font-size="11" font-family="'Red Hat Text', sans-serif">Subscribe / Features</text>
+    <text x="90" y="332" text-anchor="middle" fill="#880e4f" font-size="12" font-family="'Red Hat Text', sans-serif">AMQP (mTLS)</text>
+    <text x="90" y="352" text-anchor="middle" fill="#ad1457" font-size="11" font-family="'Red Hat Text', sans-serif">Consume Events</text>
+
+    <!-- ==================== INTERNAL ENVIRONMENT BOX ==================== -->
+    <rect x="185" y="70" width="745" height="510" rx="12" fill="none" stroke="#2e7d32" stroke-width="2"/>
+    <rect x="185" y="70" width="745" height="34" rx="12" fill="#2e7d32"/>
+    <rect x="185" y="97" width="745" height="7" fill="#2e7d32"/>
+    <text x="557" y="95" text-anchor="middle" fill="#ffffff" font-weight="700" font-size="15" font-family="'Red Hat Display', sans-serif">Internal Environment — ANSP</text>
+
+    <!-- ==================== ROW 1: KEYCLOAK | PROVIDER | KAFKA ==================== -->
+
+    <!-- Keycloak -->
+    <rect x="210" y="120" width="180" height="80" rx="8" fill="#424242" stroke="#757575" stroke-width="2" filter="url(#shadow)"/>
+    <rect x="210" y="120" width="180" height="28" rx="8" fill="#757575"/>
+    <rect x="210" y="140" width="180" height="8" fill="#757575"/>
+    <text x="300" y="142" text-anchor="middle" fill="#fff" font-weight="600" font-size="14" font-family="'Red Hat Text', sans-serif">Keycloak</text>
+    <text x="300" y="172" text-anchor="middle" fill="#e0e0e0" font-size="12" font-family="'Red Hat Text', sans-serif">OAuth2 / OIDC</text>
+    <text x="300" y="190" text-anchor="middle" fill="#bdbdbd" font-size="11" font-family="'Red Hat Text', sans-serif">JWT Token Validation</text>
+
+    <!-- DNOTAM Provider (expanded) -->
+    <rect x="430" y="120" width="250" height="250" rx="8" fill="#e8f5e9" stroke="#43a047" stroke-width="2" filter="url(#shadow)"/>
+    <rect x="430" y="120" width="250" height="32" rx="8" fill="#2e7d32"/>
+    <rect x="430" y="144" width="250" height="8" fill="#2e7d32"/>
+    <text x="555" y="145" text-anchor="middle" fill="#fff" font-weight="600" font-size="15" font-family="'Red Hat Text', sans-serif">DNOTAM Provider</text>
+    
+    <!-- Quarkus badge -->
+    <rect x="440" y="158" width="70" height="18" rx="9" fill="#4695eb"/>
+    <text x="475" y="171" text-anchor="middle" fill="#fff" font-weight="600" font-size="9" font-family="'Red Hat Text', sans-serif">Quarkus</text>
+    
+    <!-- Cloud-Native badge -->
+    <rect x="515" y="158" width="80" height="18" rx="9" fill="#0db7ed"/>
+    <text x="555" y="171" text-anchor="middle" fill="#fff" font-weight="600" font-size="9" font-family="'Red Hat Text', sans-serif">Cloud-Native</text>
+    
+    <text x="555" y="200" text-anchor="middle" fill="#1b5e20" font-weight="600" font-size="13" font-family="'Red Hat Text', sans-serif">SWIM API</text>
+    <text x="555" y="220" text-anchor="middle" fill="#2e7d32" font-size="12" font-family="'Red Hat Text', sans-serif">Subscription / WFS GetFeature</text>
+    <text x="555" y="250" text-anchor="middle" fill="#1b5e20" font-weight="600" font-size="13" font-family="'Red Hat Text', sans-serif">Event Processor</text>
+    <text x="555" y="270" text-anchor="middle" fill="#2e7d32" font-size="12" font-family="'Red Hat Text', sans-serif">Filter Matching + Outbox</text>
+    <text x="555" y="300" text-anchor="middle" fill="#1b5e20" font-weight="600" font-size="13" font-family="'Red Hat Text', sans-serif">Fault Tolerance</text>
+    <text x="555" y="320" text-anchor="middle" fill="#2e7d32" font-size="12" font-family="'Red Hat Text', sans-serif">Retry / CircuitBreaker / Bulkhead</text>
+    <text x="555" y="355" text-anchor="middle" fill="#ff8f00" font-size="11" font-family="'Red Hat Text', sans-serif">Internal API (Vert.x :9080)</text>
+
+    <!-- Kafka -->
+    <rect x="720" y="120" width="190" height="130" rx="8" fill="#424242" stroke="#757575" stroke-width="2" filter="url(#shadow)"/>
+    <rect x="720" y="120" width="190" height="28" rx="8" fill="#757575"/>
+    <rect x="720" y="140" width="190" height="8" fill="#757575"/>
+    <text x="815" y="142" text-anchor="middle" fill="#fff" font-weight="600" font-size="14" font-family="'Red Hat Text', sans-serif">Kafka</text>
+    <text x="815" y="178" text-anchor="middle" fill="#4caf50" font-size="13" font-family="'Red Hat Text', sans-serif">dnotam-events</text>
+    <text x="815" y="208" text-anchor="middle" fill="#bdbdbd" font-size="11" font-family="'Red Hat Text', sans-serif">Internal Only</text>
+    <text x="815" y="235" text-anchor="middle" fill="#90caf9" font-size="12" font-family="'Red Hat Text', sans-serif">AMQ Streams</text>
+
+    <!-- ==================== ROW 2: ARTEMIS | KUBERNETES | POSTGRESQL ==================== -->
+
+    <!-- Artemis -->
+    <rect x="210" y="400" width="180" height="130" rx="8" fill="#424242" stroke="#757575" stroke-width="2" filter="url(#shadow)"/>
+    <rect x="210" y="400" width="180" height="28" rx="8" fill="#757575"/>
+    <rect x="210" y="420" width="180" height="8" fill="#757575"/>
+    <text x="300" y="422" text-anchor="middle" fill="#fff" font-weight="600" font-size="14" font-family="'Red Hat Text', sans-serif">ActiveMQ Artemis</text>
+    <text x="300" y="458" text-anchor="middle" fill="#4caf50" font-size="13" font-family="'Red Hat Text', sans-serif">DNOTAM.v1.*.sub*</text>
+    <text x="300" y="488" text-anchor="middle" fill="#bdbdbd" font-size="11" font-family="'Red Hat Text', sans-serif">Client Queues</text>
+    <text x="300" y="515" text-anchor="middle" fill="#90caf9" font-size="12" font-family="'Red Hat Text', sans-serif">AMQP 1.0 (mTLS)</text>
+
+    <!-- Kubernetes/OpenShift -->
+    <rect x="430" y="420" width="250" height="100" rx="8" fill="#424242" stroke="#757575" stroke-width="2" filter="url(#shadow)"/>
+    <rect x="430" y="420" width="250" height="28" rx="8" fill="#757575"/>
+    <rect x="430" y="440" width="250" height="8" fill="#757575"/>
+    <text x="555" y="442" text-anchor="middle" fill="#fff" font-weight="600" font-size="13" font-family="'Red Hat Text', sans-serif">Kubernetes/OpenShift</text>
+    <text x="555" y="478" text-anchor="middle" fill="#e0e0e0" font-size="12" font-family="'Red Hat Text', sans-serif">Queue Config Secrets</text>
+    <text x="555" y="505" text-anchor="middle" fill="#bdbdbd" font-size="11" font-family="'Red Hat Text', sans-serif">Operator Reconciles</text>
+
+    <!-- PostgreSQL -->
+    <rect x="720" y="270" width="190" height="100" rx="8" fill="#424242" stroke="#757575" stroke-width="2" filter="url(#shadow)"/>
+    <rect x="720" y="270" width="190" height="28" rx="8" fill="#757575"/>
+    <rect x="720" y="290" width="190" height="8" fill="#757575"/>
+    <text x="815" y="292" text-anchor="middle" fill="#fff" font-weight="600" font-size="14" font-family="'Red Hat Text', sans-serif">PostgreSQL</text>
+    <text x="815" y="328" text-anchor="middle" fill="#e0e0e0" font-size="12" font-family="'Red Hat Text', sans-serif">subscriptions | topics</text>
+    <text x="815" y="355" text-anchor="middle" fill="#e0e0e0" font-size="12" font-family="'Red Hat Text', sans-serif">dnotam_events</text>
+
+    <!-- ==================== OBSERVABILITY STACK (Bottom Right) ==================== -->
+    <rect x="720" y="390" width="190" height="130" rx="8" fill="#1a237e" stroke="#3949ab" stroke-width="2" filter="url(#shadow)"/>
+    <rect x="720" y="390" width="190" height="28" rx="8" fill="#3949ab"/>
+    <rect x="720" y="410" width="190" height="8" fill="#3949ab"/>
+    <text x="815" y="412" text-anchor="middle" fill="#fff" font-weight="600" font-size="13" font-family="'Red Hat Text', sans-serif">Observability</text>
+    
+    <text x="765" y="448" text-anchor="middle" fill="#ff9800" font-weight="600" font-size="11" font-family="'Red Hat Text', sans-serif">Prometheus</text>
+    <text x="865" y="448" text-anchor="middle" fill="#f06292" font-weight="600" font-size="11" font-family="'Red Hat Text', sans-serif">Grafana</text>
+    
+    <text x="765" y="485" text-anchor="middle" fill="#4dd0e1" font-weight="600" font-size="11" font-family="'Red Hat Text', sans-serif">Tempo</text>
+    <text x="865" y="485" text-anchor="middle" fill="#81c784" font-weight="600" font-size="11" font-family="'Red Hat Text', sans-serif">OpenTelemetry</text>
+    
+    <text x="815" y="510" text-anchor="middle" fill="#9fa8da" font-size="10" font-family="'Red Hat Text', sans-serif">Metrics | Tracing | Dashboards</text>
+
+    <!-- ==================== ARROWS ==================== -->
+
+    <!-- Client to Keycloak: top of Client, curve, then horizontal to Keycloak -->
+    <path d="M 90 215 L 90 160 L 140 160 L 205 160" fill="none" stroke="#90a4ae" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+    <!-- Client to Artemis: bottom of Client, curve, then horizontal to Artemis -->
+    <path d="M 90 385 L 90 465 L 140 465 L 205 465" fill="none" stroke="#90a4ae" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+    <!-- Client to Provider (REST) - straight horizontal line -->
+    <line x1="165" y1="290" x2="425" y2="290" stroke="#90a4ae" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+    <!-- Artemis to Keycloak -->
+    <line x1="300" y1="395" x2="300" y2="205" stroke="#90a4ae" stroke-width="2" stroke-dasharray="4,2" marker-end="url(#arrowhead)"/>
+
+    <!-- Provider to Keycloak -->
+    <line x1="425" y1="160" x2="395" y2="160" stroke="#90a4ae" stroke-width="2" stroke-dasharray="4,2" marker-end="url(#arrowhead)"/>
+
+    <!-- Kafka to Provider - horizontal -->
+    <line x1="715" y1="180" x2="685" y2="180" stroke="#90a4ae" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+    <!-- Provider to PostgreSQL - horizontal -->
+    <line x1="685" y1="320" x2="715" y2="320" stroke="#90a4ae" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+    <!-- Provider to Artemis: diagonal line from bottom-left of Provider to top-right of Artemis -->
+    <line x1="430" y1="370" x2="390" y2="400" stroke="#90a4ae" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+    <!-- Provider to Kubernetes -->
+    <line x1="555" y1="375" x2="555" y2="415" stroke="#90a4ae" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+    <!-- Kubernetes to Artemis (reconcile) -->
+    <line x1="425" y1="470" x2="395" y2="470" stroke="#90a4ae" stroke-width="2" stroke-dasharray="4,2" marker-end="url(#arrowhead)"/>
+
+    <!-- Provider to Observability: from bottom-right of Provider to top-left of Observability -->
+    <line x1="680" y1="370" x2="720" y2="390" stroke="#3949ab" stroke-width="2" stroke-dasharray="4,2" marker-end="url(#arrowhead)"/>
+
+</svg>
