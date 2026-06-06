@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swim-dnotam-provider
+  namespace: swim-demo
+  labels:
+    app: swim-dnotam-provider
+    app.kubernetes.io/part-of: swim-dnotam
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: swim-dnotam-provider
+  template:
+    metadata:
+      labels:
+        app: swim-dnotam-provider
+    spec:
+      containers:
+      - name: swim-dnotam-provider
+        image: quay.io/masales/swim-dnotam-provider:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+          name: http
+        - containerPort: 8443
+          protocol: TCP
+          name: https
+        envFrom:
+        - configMapRef:
+            name: swim-dnotam-provider-config
+        - secretRef:
+            name: swim-dnotam-provider-secret
+        - secretRef:
+            name: swim-dnotam-provider-oidc-secret
+        - configMapRef:
+            name: swim-dnotam-provider-topics
+        resources:
+          requests:
+            memory: 256Mi
+            cpu: 250m
+          limits:
+            memory: 512Mi
+            cpu: 500m
+        volumeMounts:
+        - name: server-cert
+          mountPath: /certs/server
+          readOnly: true
+        - name: ca-cert
+          mountPath: /certs/ca
+          readOnly: true
+        livenessProbe:
+          httpGet:
+            path: /q/health/live
+            port: 8080
+          initialDelaySeconds: 3
+          periodSeconds: 10
+          timeoutSeconds: 2
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /q/health/ready
+            port: 8080
+          initialDelaySeconds: 3
+          periodSeconds: 2
+          timeoutSeconds: 3
+          failureThreshold: 3
+      volumes:
+      - name: server-cert
+        secret:
+          secretName: swim-dnotam-provider-server-tls
+      - name: ca-cert
+        configMap:
+          name: swim-ca-bundle
+

@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 370" font-family="Arial, sans-serif">
+
+  <!-- Title -->
+  <text x="500" y="22" text-anchor="middle" font-size="13" font-weight="bold" fill="#212121">swim-digital-notam-provider — Architecture</text>
+
+  <!-- ═══════════════════════════════════════════════════════
+       LEFT: Event Sources (accumulative)
+  ═══════════════════════════════════════════════════════ -->
+  <text x="103" y="46" text-anchor="middle" font-size="10" font-weight="bold" fill="#e65100">Event Sources</text>
+  <text x="103" y="58" text-anchor="middle" font-size="9" fill="#78909c">accumulative</text>
+
+  <!-- Source 1: Kafka -->
+  <rect x="10" y="64" width="185" height="44" rx="6" fill="#fff3e0" stroke="#e65100" stroke-width="1.5"/>
+  <text x="102" y="82" text-anchor="middle" font-size="11" font-weight="bold" fill="#bf360c">Kafka event stream</text>
+  <text x="102" y="97" text-anchor="middle" font-size="10" fill="#546e7a">upstream DNOTAM events</text>
+
+  <!-- Source 2: HTTP trigger -->
+  <rect x="10" y="118" width="185" height="44" rx="6" fill="#fff3e0" stroke="#e65100" stroke-width="1.5"/>
+  <text x="102" y="136" text-anchor="middle" font-size="11" font-weight="bold" fill="#bf360c">HTTP trigger API</text>
+  <text x="102" y="151" text-anchor="middle" font-size="10" fill="#546e7a">direct event injection</text>
+
+  <!-- Source N: extensible (dashed) -->
+  <rect x="10" y="172" width="185" height="44" rx="6" fill="#fafafa" stroke="#e65100" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="102" y="193" text-anchor="middle" font-size="11" font-weight="bold" fill="#bf360c">+ other sources</text>
+  <text x="102" y="208" text-anchor="middle" font-size="10" fill="#78909c">AMQ, file, DB, webhook...</text>
+
+  <!-- Arrows → Event ingress -->
+  <line x1="195" y1="86"  x2="248" y2="132" stroke="#757575" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="195" y1="140" x2="248" y2="140" stroke="#757575" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="195" y1="194" x2="248" y2="149" stroke="#757575" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr)"/>
+
+  <!-- Event ingress (convergence, conceptual) -->
+  <rect x="248" y="118" width="140" height="44" rx="6" fill="#fce4ec" stroke="#c62828" stroke-width="2"/>
+  <text x="318" y="136" text-anchor="middle" font-size="11" font-weight="bold" fill="#b71c1c">Event ingress</text>
+  <text x="318" y="151" text-anchor="middle" font-size="9" fill="#546e7a">accumulative</text>
+
+  <!-- Arrow Event ingress → Provider -->
+  <line x1="388" y1="140" x2="432" y2="140" stroke="#757575" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- ═══════════════════════════════════════════════════════
+       CENTER: DNOTAM Provider
+  ═══════════════════════════════════════════════════════ -->
+  <rect x="432" y="48" width="210" height="150" rx="6" fill="#e3f2fd" stroke="#1565c0" stroke-width="2"/>
+  <text x="537" y="67"  text-anchor="middle" font-size="12" font-weight="bold" fill="#0d47a1">DNOTAM Provider</text>
+  <text x="537" y="84"  text-anchor="middle" font-size="10" fill="#546e7a">Subscription Manager API</text>
+  <text x="537" y="99"  text-anchor="middle" font-size="10" fill="#546e7a">OIDC / JWT authentication</text>
+  <text x="537" y="114" text-anchor="middle" font-size="10" fill="#546e7a">AIXM 5.1.1 / XSD validation</text>
+  <text x="537" y="129" text-anchor="middle" font-size="10" fill="#546e7a">Dynamic queue management</text>
+  <text x="537" y="144" text-anchor="middle" font-size="10" fill="#546e7a">AMQP delivery + heartbeat</text>
+  <text x="537" y="159" text-anchor="middle" font-size="10" fill="#546e7a">WFS GetFeature</text>
+  <text x="537" y="174" text-anchor="middle" font-size="10" fill="#546e7a">Subscription expiry / dedup</text>
+
+  <!-- Arrow Provider → PostgreSQL (downward — internal resource) -->
+  <line x1="537" y1="198" x2="537" y2="238" stroke="#757575" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- PostgreSQL BELOW provider (internal) -->
+  <rect x="452" y="238" width="170" height="44" rx="6" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1.5"/>
+  <text x="537" y="256" text-anchor="middle" font-size="11" font-weight="bold" fill="#1b5e20">PostgreSQL</text>
+  <text x="537" y="271" text-anchor="middle" font-size="10" fill="#546e7a">subscriptions / audit</text>
+
+  <!-- ═══════════════════════════════════════════════════════
+       RIGHT: Artemis + Keycloak
+  ═══════════════════════════════════════════════════════ -->
+
+  <!-- Arrow Provider → Artemis -->
+  <line x1="642" y1="85" x2="690" y2="72" stroke="#757575" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Arrow Provider → Keycloak -->
+  <line x1="642" y1="155" x2="690" y2="168" stroke="#757575" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Artemis Broker -->
+  <rect x="690" y="48" width="145" height="48" rx="6" fill="#e8eaf6" stroke="#3949ab" stroke-width="1.5"/>
+  <text x="762" y="68" text-anchor="middle" font-size="11" font-weight="bold" fill="#1a237e">Artemis Broker</text>
+  <text x="762" y="83" text-anchor="middle" font-size="10" fill="#546e7a">AMQP 1.0 / mTLS</text>
+
+  <!-- Keycloak -->
+  <rect x="690" y="148" width="145" height="48" rx="6" fill="#fce4ec" stroke="#c62828" stroke-width="1.5"/>
+  <text x="762" y="168" text-anchor="middle" font-size="11" font-weight="bold" fill="#b71c1c">Keycloak</text>
+  <text x="762" y="183" text-anchor="middle" font-size="10" fill="#546e7a">OIDC / JWT realm swim</text>
+
+  <!-- ═══════════════════════════════════════════════════════
+       FAR RIGHT: SWIM Consumers (legible, horizontal box)
+  ═══════════════════════════════════════════════════════ -->
+
+  <!-- Arrow Artemis → SWIM Consumers -->
+  <line x1="835" y1="72" x2="862" y2="88" stroke="#757575" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- Arrow SWIM Consumers → Keycloak -->
+  <line x1="862" y1="148" x2="835" y2="180" stroke="#757575" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- SWIM Consumers box -->
+  <rect x="862" y="62" width="128" height="90" rx="6" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1.5"/>
+  <text x="926" y="90"  text-anchor="middle" font-size="12" font-weight="bold" fill="#1b5e20">SWIM</text>
+  <text x="926" y="107" text-anchor="middle" font-size="12" font-weight="bold" fill="#1b5e20">Consumers</text>
+  <text x="926" y="123" text-anchor="middle" font-size="9" fill="#546e7a">AMQP events</text>
+  <text x="926" y="138" text-anchor="middle" font-size="9" fill="#546e7a">OIDC authentication</text>
+
+  <!-- ═══════════════════════════════════════════════════════
+       Footer
+  ═══════════════════════════════════════════════════════ -->
+  <text x="500" y="320" text-anchor="middle" font-size="9" fill="#78909c">Event Sources are accumulative: any number of sources can feed events into the provider simultaneously.</text>
+  <text x="500" y="334" text-anchor="middle" font-size="9" fill="#78909c">Adding a new source requires no changes to the provider core.</text>
+
+  <defs>
+    <marker id="arr" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L7,3 z" fill="#757575"/>
+    </marker>
+  </defs>
+
+</svg>

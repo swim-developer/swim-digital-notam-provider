@@ -1,0 +1,19 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: swim-dnotam-provider-http
+  namespace: swim-demo
+  labels:
+    app: swim-dnotam-provider
+    app.kubernetes.io/part-of: swim-dnotam
+spec:
+  host: swim-dnotam-provider-http.apps.ocp4.masales.cloud
+  to:
+    kind: Service
+    name: swim-dnotam-provider
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+

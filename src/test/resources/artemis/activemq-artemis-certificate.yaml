@@ -1,0 +1,24 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: activemq-artemis-certificate
+  labels:
+    app: activemq-artemis-instance
+spec:
+  secretName: activemq-artemis-instance-tls
+  issuerRef:
+    name: swim-ca-issuer
+    kind: ClusterIssuer
+  commonName: activemq-artemis-instance.apps.ocp4.masales.cloud
+  dnsNames:
+    - activemq-artemis-instance-amqp-0-svc
+    - activemq-artemis-instance-hdls-svc
+    - activemq-artemis-instance-openwire-0-svc
+    - activemq-artemis-instance-wsconsj-0-svc
+  usages:
+    - server auth
+  privateKey:
+    algorithm: RSA
+    size: 2048
+    rotationPolicy: Always
+

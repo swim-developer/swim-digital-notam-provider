@@ -1,0 +1,95 @@
+{
+  "info": {
+    "name": "SWIM DNOTAM Provider Validator",
+    "description": "REST triggers for swim-dnotam-provider **Vert.x internal HTTP server** (not Quarkus main port). POST http://HOST:PORT/internal/v1/trigger — default PORT 9080 (`internal.server.port`). If you get Quarkus `Page Not Found` with `_links`, the request hit 8080/8443 instead of 9080.\n\n## Demo flow\n1. **Subscription A (browser 1)**: topic DigitalNOTAMService, eventScenario [AD.LIM], airportHeliport [EADD], description as you prefer.\n2. **Request 01** — XML `DN_AD.LIM_1_prohibit_tgl.xml`: scenario AD.LIM, NOTAM location EADD → delivered to subscription A.\n3. **Request 02** — XML `GEN_RWY_CLS_023.xml`: scenario RWY.CLS, NOTAM location EGLL → valid AIXM, **not** matching subscription A (no delivery).\n4. **Subscription B (browser 2)**: topic DigitalNOTAMService, eventScenario [RWY.CLS], airportHeliport [EGLL], description e.g. Heathrow RWY closure.\n5. **Request 02 again** (or duplicate) — same RWY.CLS/EGLL payload → delivered to subscription B only; subscription A still receives nothing.\n\n### Why not DN_SFC.CON_1 for the second pair?\nThe provider `DnotamEventExtractor` resolves airport from NOTAM/location or specific xlink patterns; SNOWTAM-based SFC.CON samples may not resolve to EADD reliably for filtering. RWY.CLS + EGLL uses NOTAM/location and matches the extractor.\n\n### Environment\n- `provider_internal_host` (default localhost)\n- `provider_internal_port` (default 9080)\n\nRequires **SWIM Local**.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01 — Trigger internal: AD.LIM / EADD (match subscription A)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/xml"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><!-- Example initially created by Andreea PERCA, ASBU For Future GMBH, updated by Manfred Odenstein, SOLITEC Software Soltuions GmbH -->\n<!-- Copyright (c) 2018, EUROCONTROL & FAA\n\nAll rights reserved.\n\nRedistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:\n\n    Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.\n    Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.\n    Neither the names of EUROCONTROL or FAA nor the names of their contributors may be used to endorse or promote products derived from this specification without specific prior written permission.\n\nTHIS FICTITIOUS DATA SET IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, \nINCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. \nIN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR \nCONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; \nOR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR \nTORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n\nEditorial note: this license is an instance of the BSD license template as provided by the Open Source Initiative: http://www.opensource.org/licenses/bsd-license.php-->\n<!-- Modified by Marcelo Sales (marcelo.d.sales@gmail.com) for the SWIM Developer project.\n     Project: https://github.com/orgs/swim-developer/repositories\n     Purpose: Testing and demonstration of SWIM Digital NOTAM services.\n     All credits to the original creator(s) must be preserved. --><!-- For sake of completion, the BASELINE data in provided below in the same file-->\n<message:AIXMBasicMessage xmlns:message=\"http://www.aixm.aero/schema/5.1.1/message\" xmlns:aixm=\"http://www.aixm.aero/schema/5.1.1\" xmlns:event=\"http://www.aixm.aero/schema/5.1.1/event\" xmlns:gml=\"http://www.opengis.net/gml/3.2\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" gml:id=\"M00001\" xsi:schemaLocation=\"http://www.aixm.aero/schema/5.1.1/message http://www.aixm.aero/schema/5.1.1/message/AIXM_BasicMessage.xsd      http://www.aixm.aero/schema/5.1.1/event http://www.aixm.aero/schema/5.1.1/event/version_5.1.1-j/Event_Features.xsd\">    \n    <!-- This is a DN for EADD airport prohibited for touch and go-->\n    \n    <message:hasMember>\n        <event:Event gml:id=\"uuid.5ea5aa6f-ea59-40f3-86f2-401fa1946a2b\">\n            <gml:identifier codeSpace=\"urn:uuid:\">5ea5aa6f-ea59-40f3-86f2-401fa1946a2b</gml:identifier>\n            <event:timeSlice>\n                <event:EventTimeSlice gml:id=\"ID_ADLM_C1\">\n                    <gml:validTime>\n                        <gml:TimePeriod gml:id=\"ID_ADLM_C2\">\n                            <gml:beginPosition>2025-01-22T14:00:00Z</gml:beginPosition>\n                            <gml:endPosition>2025-01-27T14:00:00Z</gml:endPosition>\n                        </gml:TimePeriod>\n                    </gml:validTime>\n                    <aixm:interpretation>BASELINE</aixm:interpretation>\n                    <aixm:sequenceNumber>1</aixm:sequenceNumber>\n                    <aixm:correctionNumber>0</aixm:correctionNumber>\n                    <aixm:featureLifetime>\n                        <gml:TimePeriod gml:id=\"ID_ADLM_C3\">\n                            <gml:beginPosition>2025-01-22T14:00:00Z</gml:beginPosition>\n                            <gml:endPosition>2025-01-27T14:00:00Z</gml:endPosition>\n                        </gml:TimePeriod>\n                    </aixm:featureLifetime>\n                    <event:scenario>AD.LIM</event:scenario>\n                    <event:version>2.0</event:version>\n                    <event:concernedAirspace xlink:href=\"urn:uuid:f4d5e4d4-d84a-481f-b9e3-b359e42c0dff\"/>\n                    <event:concernedAirportHeliport xlink:href=\"urn:uuid:1b54b2d6-a5ff-4e57-94c2-f4047a381c64\" xlink:title=\"DONLON/INTL.\"/>\n                    <event:notification>\n                        <event:NOTAM gml:id=\"ID_ADLM_C4\">\n                            <event:series>A</event:series>\n                            <event:number>0023</event:number>\n                            <event:year>2025</event:year>\n                            <event:publisher xlink:href=\"urn:uuid:5ba7b064-d01b-4ea8-ae53-26696744d970\" xlink:title=\"EUROCONTROL\"/>\n                            <event:type>N</event:type>\n                            <event:affectedFIR>EAAD</event:affectedFIR>\n                            <event:selectionCode>QFALT</event:selectionCode>\n                            <event:traffic>IV</event:traffic>\n                            <event:purpose>NBO</event:purpose>\n                            <event:scope>A</event:scope>\n                            <event:minimumFL>000</event:minimumFL>\n                            <event:maximumFL>999</event:maximumFL>\n                            <event:coordinates>5222N03157W</event:coordinates>\n                            <event:radius>005</event:radius>\n                            <event:location>EADD</event:location>\n                            <event:effectiveStart>2501221400</event:effectiveStart>\n                            <event:effectiveEnd>2501271400</event:effectiveEnd>\n                            <event:text>AD prohibited for touch and go</event:text>\n                        </event:NOTAM>\n                    </event:notification>\n                    <event:provider xlink:href=\"urn:uuid:d246ff7c-6251-4246-b4bf-cccfd67bf9d7\" xlink:title=\"EAD\"/>\n                    </event:EventTimeSlice>\n            </event:timeSlice>\n        </event:Event>\n    </message:hasMember>\n</message:AIXMBasicMessage>"
+        },
+        "url": {
+          "raw": "http://{{provider_internal_host}}:{{provider_internal_port}}/internal/v1/trigger",
+          "protocol": "http",
+          "host": [
+            "{{provider_internal_host}}"
+          ],
+          "port": "{{provider_internal_port}}",
+          "path": [
+            "internal",
+            "v1",
+            "trigger"
+          ]
+        },
+        "description": "Source file: aixm-events/DN_AD.LIM_1_prohibit_tgl.xml (AIXMBasicMessage only). Proves positive filter match for subscription A."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Accepted (202)', function() {",
+              "    pm.response.to.have.status(202);",
+              "});"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 — Trigger internal: RWY.CLS / EGLL (no match for subscription A)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/xml"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!-- Generated DNOTAM Event - Scenario: RWY.CLS - Index: 23 -->\n<!-- Generated by AixmEventGeneratorTest for SWIM Consumer Validator testing -->\n\n<message:AIXMBasicMessage xmlns:message=\"http://www.aixm.aero/schema/5.1.1/message\"\n    xmlns:gml=\"http://www.opengis.net/gml/3.2\" xmlns:aixm=\"http://www.aixm.aero/schema/5.1.1\"\n    xmlns:event=\"http://www.aixm.aero/schema/5.1.1/event\" xmlns:xlink=\"http://www.w3.org/1999/xlink\"\n    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n    xsi:schemaLocation=\"http://www.aixm.aero/schema/5.1.1/message http://www.aixm.aero/schema/5.1.1/message/AIXM_BasicMessage.xsd\n    http://www.aixm.aero/schema/5.1.1/event http://www.aixm.aero/schema/5.1.1/event/version_5.1.1-j/Event_Features.xsd\"\n    gml:id=\"M00023\">\n\n    <message:hasMember>\n        <event:Event gml:id=\"uuid.3f79f7f2-a93d-44a5-8e2d-17202bda106e\">\n            <gml:identifier codeSpace=\"urn:uuid:\">3f79f7f2-a93d-44a5-8e2d-17202bda106e</gml:identifier>\n            <event:timeSlice>\n                <event:EventTimeSlice gml:id=\"ID_GEN_00023_01\">\n                    <gml:validTime>\n                        <gml:TimePeriod gml:id=\"ID_GEN_00023_02\">\n                            <gml:beginPosition>2026-04-13T04:41:30Z</gml:beginPosition>\n                            <gml:endPosition>2026-04-13T16:41:30Z</gml:endPosition>\n                        </gml:TimePeriod>\n                    </gml:validTime>\n                    <aixm:interpretation>BASELINE</aixm:interpretation>\n                    <aixm:sequenceNumber>1</aixm:sequenceNumber>\n                    <aixm:correctionNumber>0</aixm:correctionNumber>\n                    <aixm:featureLifetime>\n                        <gml:TimePeriod gml:id=\"ID_GEN_00023_03\">\n                            <gml:beginPosition>2026-04-13T04:41:30Z</gml:beginPosition>\n                            <gml:endPosition>2026-04-13T16:41:30Z</gml:endPosition>\n                        </gml:TimePeriod>\n                    </aixm:featureLifetime>\n                    <event:scenario>RWY.CLS</event:scenario>\n                    <event:version>2.0</event:version>\n                    <event:concernedAirspace xlink:href=\"urn:uuid:f4d5e4d4-d84a-481f-b9e3-b359e42c0dff\"/>\n                    <event:concernedAirportHeliport xlink:href=\"urn:uuid:1b54b2d6-a5ff-4e57-94c2-f4047a381c64\" xlink:title=\"LONDON/HEATHROW\"/>\n                    <event:notification>\n                        <event:NOTAM gml:id=\"ID_GEN_00023_04\">\n                            <event:series>A</event:series>\n                            <event:number>9540</event:number>\n                            <event:year>2026</event:year>\n                            <event:publisher xlink:href=\"urn:uuid:9bea8d1b-93f8-47b5-8f9d-835570b3f814\" xlink:title=\"NATS\"/>\n                            <event:type>N</event:type>\n                            <event:affectedFIR>LECM</event:affectedFIR>\n                            <event:selectionCode>QMRLC</event:selectionCode>\n                            <event:traffic>IV</event:traffic>\n                            <event:purpose>NBO</event:purpose>\n                            <event:scope>A</event:scope>\n                            <event:minimumFL>000</event:minimumFL>\n                            <event:maximumFL>999</event:maximumFL>\n                            <event:coordinates>5005N03855W</event:coordinates>\n                            <event:radius>005</event:radius>\n                            <event:location>EGLL</event:location>\n                            <event:effectiveStart>2604130441</event:effectiveStart>\n                            <event:effectiveEnd>2604131641</event:effectiveEnd>\n                            <event:text>RWY 14/32 closed due to maintenance.</event:text>\n                        </event:NOTAM>\n                    </event:notification>\n                    <event:provider xlink:href=\"urn:uuid:346b3924-7390-4978-9359-6201168c467f\" xlink:title=\"NATS\"/>\n                </event:EventTimeSlice>\n            </event:timeSlice>\n        </event:Event>\n    </message:hasMember>\n</message:AIXMBasicMessage>"
+        },
+        "url": {
+          "raw": "http://{{provider_internal_host}}:{{provider_internal_port}}/internal/v1/trigger",
+          "protocol": "http",
+          "host": [
+            "{{provider_internal_host}}"
+          ],
+          "port": "{{provider_internal_port}}",
+          "path": [
+            "internal",
+            "v1",
+            "trigger"
+          ]
+        },
+        "description": "Source file: aixm-events/GEN_RWY_CLS_023.xml. Valid AIXM; after subscription A exists, this must not be delivered to A. After subscription B (RWY.CLS + EGLL) exists, re-run to prove delivery to B only."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Accepted (202)', function() {",
+              "    pm.response.to.have.status(202);",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

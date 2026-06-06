@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: swim-dnotam-provider-config
+  namespace: swim-demo
+  labels:
+    app: swim-dnotam-provider
+    component: configuration
+    app.kubernetes.io/part-of: swim-dnotam
+data:
+  POSTGRES_HOST: provider-postgres.swim-demo.svc.cluster.local
+  POSTGRES_PORT: "5432"
+  POSTGRES_DB: swim-dnotam
+  
+  AMQP_HOST: provider-artemis-hdls-svc.swim-demo.svc.cluster.local
+  AMQP_PORT: "5672"
+  
+  ARTEMIS_BROKER_NAME: provider-artemis
+  ARTEMIS_JMX_URL: service:jmx:rmi:///jndi/rmi://provider-artemis-jmx-svc.swim-demo.svc.cluster.local:1099/jmxrmi
+  
+  KAFKA_BOOTSTRAP_SERVERS: kafka-kafka-bootstrap.swim-demo.svc.cluster.local:9092
+  KAFKA_TOPIC: dnotam-events-all-topic
+  KAFKA_GROUP_ID: swim-dnotam-provider
+  KAFKA_PATTERN: "false"
+  
+  QUARKUS_HTTP_PORT: "8080"
+  LOG_LEVEL: INFO
+  OTEL_ENABLED: "true"
+  OTEL_ENDPOINT: "http://tempo-tempo-distributor.central-observability.svc.cluster.local:4318/v1/traces"
+  OTEL_HEADERS: ""
+  PROMETHEUS_ENABLED: "true"
+  
+  OPENAPI_SERVERS: "https://swim-dnotam-provider-swim-demo.apps.ocp4.masales.cloud"
+

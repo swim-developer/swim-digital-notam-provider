@@ -1,0 +1,23 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: swim-dnotam-provider-server
+  namespace: swim-demo
+  labels:
+    app: swim-dnotam-provider
+    app.kubernetes.io/part-of: swim-dnotam
+spec:
+  secretName: swim-dnotam-provider-server-tls
+  issuerRef:
+    name: swim-ca-issuer
+    kind: ClusterIssuer
+  commonName: swim-dnotam-provider.apps.ocp4.masales.cloud
+  dnsNames:
+    - swim-dnotam-provider.apps.ocp4.masales.cloud
+    - swim-dnotam-provider.swim-demo.svc.cluster.local
+  usages:
+    - server auth
+  privateKey:
+    algorithm: RSA
+    size: 2048
+

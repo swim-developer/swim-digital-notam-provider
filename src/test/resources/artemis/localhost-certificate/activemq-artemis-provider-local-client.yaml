@@ -1,0 +1,29 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: artemis-provider-local-client
+spec:
+  commonName: swim-dnotam-external-client
+  dnsNames:
+  - localhost
+  - swim-dnotam-external-client.swim-sandbox.svc.cluster.local
+  - swim-dnotam-external-client
+  ipAddresses:
+    - 127.0.0.1
+    - ::1
+  issuerRef:
+    kind: ClusterIssuer
+    name: swim-ca-issuer
+  keystores:
+    jks:
+      create: true
+      passwordSecretRef:
+        key: password
+        name: swim-dnotam-external-client-keystore-password
+  privateKey:
+    algorithm: RSA
+    size: 2048
+    rotationPolicy: Always
+  secretName: swim-dnotam-external-client-tls
+  usages:
+  - client auth

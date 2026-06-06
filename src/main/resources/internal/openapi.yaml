@@ -1,0 +1,323 @@
+openapi: 3.1.0
+info:
+  title: SWIM DNOTAM Provider - Internal API
+  description: |
+    Internal API for administrative operations on the SWIM DNOTAM Provider.
+    This API is not exposed externally and should only be accessed from within the cluster.
+  version: 1.1.0
+  contact:
+    name: SWIM Development Team
+servers:
+  - url: http://localhost:9080
+    description: Internal server (cluster-only access)
+tags:
+  - name: trigger
+    description: Event triggering operations
+  - name: validation
+    description: AIXM XML validation
+  - name: subscriptions
+    description: Subscription monitoring
+  - name: status
+    description: Operational health
+paths:
+  /internal/v1/trigger:
+    post:
+      operationId: triggerDnotamEvent
+      summary: Trigger DNOTAM event processing
+      description: |
+        Accepts an AIXM XML message and processes it as if received from Kafka.
+        The message will be validated against XSD, persisted, and routed to all matching active subscriptions.
+      tags:
+        - trigger
+      requestBody:
+        description: AIXM Basic Message containing DNOTAM event
+        required: true
+        content:
+          application/xml:
+            schema:
+              type: string
+              contentMediaType: application/xml
+      responses:
+        '202':
+          description: Event accepted for processing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TriggerResponse'
+        '400':
+          description: Invalid XML format or empty body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal processing error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /internal/v1/validate:
+    post:
+      operationId: validateAixmMessage
+      summary: Validate AIXM XML against XSD schema
+      description: |
+        Validates the provided AIXM XML message against the configured XSD schema
+        without persisting or publishing. Useful for pre-flight validation before
+        officially emitting a DNOTAM event.
+      tags:
+        - validation
+      requestBody:
+        description: AIXM Basic Message to validate
+        required: true
+        content:
+          application/xml:
+            schema:
+              type: string
+              contentMediaType: application/xml
+      responses:
+        '200':
+          description: Message is valid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResponse'
+        '400':
+          description: Empty or missing XML body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: XSD validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResponse'
+        '500':
+          description: Internal validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /internal/v1/subscriptions/summary:
+    get:
+      operationId: getSubscriptionsSummary
+      summary: Summarize active subscribers
+      description: |
+        Returns a summary of all active subscriptions grouped by event scenario,
+        airport, and airspace. Shows exactly who will be impacted when a DNOTAM
+        event is published.
+      tags:
+        - subscriptions
+      responses:
+        '200':
+          description: Subscription summary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionsSummary'
+        '500':
+          description: Internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /internal/v1/status:
+    get:
+      operationId: getProviderStatus
+      summary: Operational health check
+      description: |
+        Returns the operational status of the provider including leader election state,
+        XSD validation status, subscription counts, and event processing metrics.
+      tags:
+        - status
+      responses:
+        '200':
+          description: Provider is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderStatus'
+        '503':
+          description: Provider is unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderStatusDown'
+components:
+  schemas:
+    TriggerResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          examples:
+            - accepted
+        message:
+          type: string
+          examples:
+            - Event accepted for processing
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - status
+        - message
+        - timestamp
+    ValidationResponse:
+      type: object
+      properties:
+        valid:
+          type: boolean
+        message:
+          type: string
+          examples:
+            - AIXM message is valid against XSD schema
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - valid
+        - message
+        - timestamp
+    SubscriptionsSummary:
+      type: object
+      properties:
+        totalActive:
+          type: integer
+        totalPaused:
+          type: integer
+        byScenario:
+          type: object
+          additionalProperties:
+            type: integer
+          examples:
+            - RWY.CLS: 3
+              NAV.UNS: 1
+        byAirport:
+          type: object
+          additionalProperties:
+            type: integer
+          examples:
+            - EADD: 2
+              LPPT: 1
+        byAirspace:
+          type: object
+          additionalProperties:
+            type: integer
+        subscribers:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscriberDetail'
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - totalActive
+        - totalPaused
+        - byScenario
+        - byAirport
+        - byAirspace
+        - subscribers
+        - timestamp
+    SubscriberDetail:
+      type: object
+      properties:
+        subscriptionId:
+          type: string
+          format: uuid
+        userId:
+          type: string
+        queue:
+          type: string
+        topic:
+          type: string
+        scenarios:
+          type: array
+          items:
+            type: string
+        airports:
+          type: array
+          items:
+            type: string
+        airspaces:
+          type: array
+          items:
+            type: string
+        qos:
+          type: string
+          enum:
+            - AT_MOST_ONCE
+            - AT_LEAST_ONCE
+            - EXACTLY_ONCE
+    ProviderStatus:
+      type: object
+      properties:
+        status:
+          type: string
+          examples:
+            - UP
+        leader:
+          type: boolean
+        hostname:
+          type: string
+        xsdValidation:
+          type: boolean
+        subscriptions:
+          type: object
+          properties:
+            active:
+              type: integer
+        events:
+          type: object
+          properties:
+            total:
+              type: integer
+            received:
+              type: integer
+            delivered:
+              type: integer
+            partiallyDelivered:
+              type: integer
+            deadLetter:
+              type: integer
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - status
+        - leader
+        - hostname
+        - events
+        - timestamp
+    ProviderStatusDown:
+      type: object
+      properties:
+        status:
+          type: string
+          examples:
+            - DOWN
+        error:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - status
+        - error
+        - timestamp
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          examples:
+            - Invalid XML format
+        details:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - error
+        - timestamp

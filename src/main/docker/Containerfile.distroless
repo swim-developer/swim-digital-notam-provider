@@ -1,0 +1,16 @@
+FROM quay.io/quarkus/quarkus-distroless-image:2.0
+
+LABEL org.opencontainers.image.licenses="GPL-3.0-or-later"
+LABEL org.opencontainers.image.description="SWIM DNOTAM Provider - A service that receives DNOTAM (Digital NOTAM) events via Kafka, filters them according to active subscriptions, and distributes them via AMQP to interested consumers. Implements the SWIM-TI Yellow Profile Publish/Subscribe pattern for real-time aeronautical notifications."
+LABEL org.opencontainers.image.source="https://github.com/swim-developer/swim-digital-notam-provider"
+LABEL org.opencontainers.image.version="0.0.1"
+
+COPY target/*-runner /application
+
+EXPOSE 8080
+EXPOSE 8443
+EXPOSE 9000
+EXPOSE 9080
+USER nonroot
+
+CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]

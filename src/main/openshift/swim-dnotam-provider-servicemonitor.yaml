@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: swim-dnotam-provider-metrics
+  labels:
+    app: swim-dnotam-provider
+    app.kubernetes.io/name: swim-dnotam-provider
+    app.kubernetes.io/part-of: swim-operator
+spec:
+  selector:
+    matchLabels:
+      app: swim-dnotam-provider
+  endpoints:
+  - port: http
+    path: /q/metrics
+    interval: 30s
+    scrapeTimeout: 10s
